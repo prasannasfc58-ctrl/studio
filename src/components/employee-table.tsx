@@ -7,6 +7,7 @@ import { MoreHorizontal, Star } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { Badge } from '@/components/ui/badge';
+import { SkillMatchChart } from './skill-match-chart';
 
 interface EmployeeTableProps {
   candidates: Candidate[];
@@ -25,58 +26,70 @@ export function EmployeeTable({ candidates, selectedCandidateId, onSelectCandida
             <TableHead className="p-4">Skills</TableHead>
             <TableHead className="p-4">CADD Score</TableHead>
             <TableHead className="p-4">Location</TableHead>
+            <TableHead className="p-4">Skill Match</TableHead>
             <TableHead className="w-[50px] p-4"></TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
-          {candidates.map(candidate => (
-            <TableRow 
-              key={candidate.id}
-              className={cn("cursor-pointer", selectedCandidateId === candidate.id && "bg-primary/10 hover:bg-primary/10")}
-              onClick={() => onSelectCandidate(candidate.id)}
-            >
-              <TableCell className="p-4">
-                <div className="flex items-center gap-3">
-                  <Avatar className="h-10 w-10 border-2 border-primary/20">
-                    <AvatarImage src={candidate.avatar} alt={candidate.name} />
-                    <AvatarFallback>{candidate.name.charAt(0)}</AvatarFallback>
-                  </Avatar>
-                  <div>
-                    <p className="font-medium">{candidate.name}</p>
-                    <p className="text-xs text-muted-foreground">{candidate.phone}</p>
+          {candidates.map(candidate => {
+            const matchingSkills = candidate.skills.filter(skill => candidate.topics.includes(skill));
+            const skillMatchPercentage = candidate.topics.length > 0 ? Math.round((matchingSkills.length / candidate.topics.length) * 100) : 0;
+            
+            return (
+              <TableRow 
+                key={candidate.id}
+                className={cn("cursor-pointer", selectedCandidateId === candidate.id && "bg-primary/10 hover:bg-primary/10")}
+                onClick={() => onSelectCandidate(candidate.id)}
+              >
+                <TableCell className="p-4">
+                  <div className="flex items-center gap-3">
+                    <Avatar className="h-10 w-10 border-2 border-primary/20">
+                      <AvatarImage src={candidate.avatar} alt={candidate.name} />
+                      <AvatarFallback>{candidate.name.charAt(0)}</AvatarFallback>
+                    </Avatar>
+                    <div>
+                      <p className="font-medium">{candidate.name}</p>
+                      <p className="text-xs text-muted-foreground">{candidate.phone}</p>
+                    </div>
                   </div>
-                </div>
-              </TableCell>
-              <TableCell className="p-4">{candidate.email}</TableCell>
-              <TableCell className="p-4">
-                <div className="flex flex-wrap items-center gap-1">
-                  {candidate.skills.slice(0, 2).map(skill => (
-                    <Badge key={skill} variant="secondary" className="text-xs">{skill}</Badge>
-                  ))}
-                  {candidate.skills.length > 2 && (
-                    <Badge variant="outline" className="text-xs font-medium">
-                      +{candidate.skills.length - 2}
-                    </Badge>
-                  )}
-                </div>
-              </TableCell>
-              <TableCell className="p-4">
-                <div className="flex items-center gap-1.5">
-                  <Star className="h-4 w-4 text-primary fill-current" />
-                  <span className="font-semibold">{candidate.caddScore}</span>
-                </div>
-              </TableCell>
-              <TableCell className="p-4">{candidate.location}</TableCell>
-              <TableCell className="p-4">
-                <Button variant="ghost" size="icon" className="rounded-full">
-                  <MoreHorizontal className="h-4 w-4" />
-                </Button>
-              </TableCell>
-            </TableRow>
-          ))}
+                </TableCell>
+                <TableCell className="p-4">{candidate.email}</TableCell>
+                <TableCell className="p-4">
+                  <div className="flex flex-wrap items-center gap-1">
+                    {candidate.skills.slice(0, 2).map(skill => (
+                      <Badge key={skill} variant="secondary" className="text-xs">{skill}</Badge>
+                    ))}
+                    {candidate.skills.length > 2 && (
+                      <Badge variant="outline" className="text-xs font-medium">
+                        +{candidate.skills.length - 2}
+                      </Badge>
+                    )}
+                  </div>
+                </TableCell>
+                <TableCell className="p-4">
+                  <div className="flex items-center gap-1.5">
+                    <Star className="h-4 w-4 text-primary fill-current" />
+                    <span className="font-semibold">{candidate.caddScore}</span>
+                  </div>
+                </TableCell>
+                <TableCell className="p-4">{candidate.location}</TableCell>
+                <TableCell className="p-4">
+                  <div className="flex items-center gap-2">
+                    <SkillMatchChart value={skillMatchPercentage} />
+                    <span className="font-semibold text-sm">{skillMatchPercentage}%</span>
+                  </div>
+                </TableCell>
+                <TableCell className="p-4">
+                  <Button variant="ghost" size="icon" className="rounded-full">
+                    <MoreHorizontal className="h-4 w-4" />
+                  </Button>
+                </TableCell>
+              </TableRow>
+            )
+          })}
            {candidates.length === 0 && (
             <TableRow>
-              <TableCell colSpan={6} className="h-24 text-center">
+              <TableCell colSpan={7} className="h-24 text-center">
                 No employees found matching your criteria.
               </TableCell>
             </TableRow>
