@@ -36,18 +36,16 @@ export function CandidateDetails({ candidate }: CandidateDetailsProps) {
 
   return (
     <div className="relative">
-      <div className="sticky top-0 bg-card z-10 pt-1 pb-6 -mt-1">
-        <div className="flex flex-col items-center text-center">
-          <Avatar className="h-24 w-24 border-4 border-card shadow-md">
-            <AvatarImage src={candidate.avatar} alt={candidate.name} />
-            <AvatarFallback>{candidate.name.charAt(0)}</AvatarFallback>
-          </Avatar>
-          <h2 className="text-xl font-bold mt-4">{candidate.name}</h2>
-          <p className="text-muted-foreground">{candidate.summary.split('.')[0]}</p>
-          <div className="flex items-center gap-2 mt-2">
-            <MapPin className="h-4 w-4 text-muted-foreground" />
-            <span className="text-muted-foreground">{candidate.location}</span>
-          </div>
+      <div className="flex flex-col items-center text-center">
+        <Avatar className="h-24 w-24 border-4 border-card shadow-md">
+          <AvatarImage src={candidate.avatar} alt={candidate.name} />
+          <AvatarFallback>{candidate.name.charAt(0)}</AvatarFallback>
+        </Avatar>
+        <h2 className="text-xl font-bold mt-4">{candidate.name}</h2>
+        <p className="text-muted-foreground">{candidate.summary.split('.')[0]}</p>
+        <div className="flex items-center gap-2 mt-2">
+          <MapPin className="h-4 w-4 text-muted-foreground" />
+          <span className="text-muted-foreground">{candidate.location}</span>
         </div>
       </div>
 
