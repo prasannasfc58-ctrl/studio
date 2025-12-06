@@ -3,8 +3,7 @@
 import type { Candidate } from '@/lib/types';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { MoreHorizontal, Star } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { Star } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Badge } from '@/components/ui/badge';
 import { SkillMatchChart } from './skill-match-chart';
@@ -27,7 +26,6 @@ export function EmployeeTable({ candidates, selectedCandidateId, onSelectCandida
             <TableHead className="p-4">CADD Score</TableHead>
             <TableHead className="p-4">Location</TableHead>
             <TableHead className="p-4">Skill Match</TableHead>
-            <TableHead className="w-[50px] p-4"></TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -79,17 +77,12 @@ export function EmployeeTable({ candidates, selectedCandidateId, onSelectCandida
                     <span className="font-semibold text-sm">{skillMatchPercentage}%</span>
                   </div>
                 </TableCell>
-                <TableCell className="p-4">
-                  <Button variant="ghost" size="icon" className="rounded-full">
-                    <MoreHorizontal className="h-4 w-4" />
-                  </Button>
-                </TableCell>
               </TableRow>
             )
           })}
            {candidates.length === 0 && (
             <TableRow>
-              <TableCell colSpan={7} className="h-24 text-center">
+              <TableCell colSpan={6} className="h-24 text-center">
                 No employees found matching your criteria.
               </TableCell>
             </TableRow>
