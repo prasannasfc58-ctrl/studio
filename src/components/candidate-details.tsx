@@ -43,10 +43,12 @@ export function CandidateDetails({ candidate }: CandidateDetailsProps) {
           <AvatarFallback>{candidate.name.charAt(0)}</AvatarFallback>
         </Avatar>
         <h2 className="text-xl font-bold mt-4">{candidate.name}</h2>
-        <p className="text-muted-foreground">{candidate.summary.split('.')[0]}</p>
+        {candidate.experience.length > 0 && (
+          <p className="text-muted-foreground">{candidate.experience[0].role}</p>
+        )}
         <div className="flex items-center gap-2 mt-2">
-          <MapPin className="h-4 w-4 text-muted-foreground" />
-          <span className="text-muted-foreground">{candidate.location}</span>
+            <MapPin className="h-4 w-4 text-muted-foreground" />
+            <span className="text-muted-foreground">{candidate.location}</span>
         </div>
       </div>
 
