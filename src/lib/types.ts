@@ -6,7 +6,7 @@ export type Candidate = {
   phone: string;
   linkedin: string;
   location: string;
-  status: 'Available' | 'Interviewing' | 'Hired' | 'Selected' | 'Rejected' | 'On Hold';
+  status: 'Interviewing' | 'Hired' | 'Selected' | 'Rejected' | 'On Hold';
   courses: string[];
   caddScore: number;
   skills: string[];

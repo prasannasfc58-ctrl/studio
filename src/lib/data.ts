@@ -81,7 +81,7 @@ export const candidates: Candidate[] = [
     phone: '555-0104',
     linkedin: 'linkedin.com/in/davidchen',
     location: 'Seattle, WA',
-    status: 'Available',
+    status: 'On Hold',
     courses: ['Machine Learning with Python', 'Deep Learning Specialization'],
     caddScore: 95,
     skills: ['Python', 'TensorFlow', 'PyTorch', 'scikit-learn', 'Pandas', 'Natural Language Processing', 'SQL'],
@@ -103,7 +103,7 @@ export const candidates: Candidate[] = [
     phone: '555-0105',
     linkedin: 'linkedin.com/in/sofiapetrova',
     location: 'Chicago, IL',
-    status: 'Available',
+    status: 'On Hold',
     courses: ['Agile Project Management', 'Certified ScrumMaster'],
     caddScore: 88,
     skills: ['Agile Methodologies', 'Scrum', 'Jira', 'Product Roadmapping', 'Stakeholder Management', 'Team Leadership'],
@@ -125,7 +125,7 @@ export const candidates: Candidate[] = [
     phone: '555-0106',
     linkedin: 'linkedin.com/in/leokim',
     location: 'Boston, MA',
-    status: 'Available',
+    status: 'On Hold',
     courses: ['Cybersecurity Fundamentals', 'Ethical Hacking'],
     caddScore: 82,
     skills: ['Network Security', 'Penetration Testing', 'Cryptography', 'Python', 'Wireshark', 'Cloud Security'],
@@ -141,4 +141,4 @@ export const candidates: Candidate[] = [
   }
 ];
 
-export const candidateStatuses: Candidate['status'][] = ['Available', 'Interviewing', 'Hired'];
+export const candidateStatuses: Candidate['status'][] = ['Interviewing', 'Hired'];
