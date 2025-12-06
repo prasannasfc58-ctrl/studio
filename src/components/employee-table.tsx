@@ -49,10 +49,15 @@ export function EmployeeTable({ candidates, selectedCandidateId, onSelectCandida
               </TableCell>
               <TableCell>{candidate.email}</TableCell>
               <TableCell>
-                <div className="flex flex-wrap gap-1">
+                <div className="flex flex-wrap items-center gap-1">
                   {candidate.skills.slice(0, 2).map(skill => (
                     <Badge key={skill} variant="secondary" className="text-xs">{skill}</Badge>
                   ))}
+                  {candidate.skills.length > 2 && (
+                    <Badge variant="outline" className="text-xs">
+                      +{candidate.skills.length - 2}
+                    </Badge>
+                  )}
                 </div>
               </TableCell>
               <TableCell>
