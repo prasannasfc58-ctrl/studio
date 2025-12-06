@@ -4,10 +4,10 @@ import type { Candidate } from '@/lib/types';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Separator } from '@/components/ui/separator';
-import { Button } from '@/components/ui/button';
-import { Edit, Send, Star, MapPin } from 'lucide-react';
+import { Star, MapPin, Check, X } from 'lucide-react';
 import { IntelligentMatching } from './intelligent-matching';
 import { Badge } from '@/components/ui/badge';
+import { Progress } from '@/components/ui/progress';
 
 interface CandidateDetailsProps {
   candidate: Candidate | null;
@@ -33,6 +33,9 @@ export function CandidateDetails({ candidate }: CandidateDetailsProps) {
     );
   }
 
+  const matchingSkills = candidate.skills.filter(skill => candidate.topics.includes(skill));
+  const skillMatchPercentage = candidate.topics.length > 0 ? (matchingSkills.length / candidate.topics.length) * 100 : 0;
+
   return (
     <div className="space-y-6">
         <div className="flex flex-col items-center text-center">
@@ -45,10 +48,6 @@ export function CandidateDetails({ candidate }: CandidateDetailsProps) {
           <div className="flex items-center gap-2 mt-2">
             <MapPin className="h-4 w-4 text-muted-foreground" />
             <span className="text-muted-foreground">{candidate.location}</span>
-          </div>
-          <div className="flex gap-2 mt-4">
-            <Button variant="outline" size="sm"><Edit className="mr-2 h-4 w-4"/> Edit Info</Button>
-            <Button size="sm"><Send className="mr-2 h-4 w-4"/> Send Message</Button>
           </div>
         </div>
         
@@ -65,24 +64,53 @@ export function CandidateDetails({ candidate }: CandidateDetailsProps) {
         <Separator />
 
         <div>
-            <h3 className="font-semibold mb-2">Skills & Score</h3>
-             <div className="space-y-3">
-                <div className="flex flex-wrap gap-2">
-                    {candidate.skills.map(skill => (
-                        <Badge key={skill} variant="secondary">{skill}</Badge>
-                    ))}
+            <h3 className="font-semibold mb-4">Skills Match</h3>
+            <div className="space-y-4">
+                <div>
+                    <div className="flex justify-between items-center mb-2">
+                        <p className="text-sm font-medium">Match Percentage</p>
+                        <p className="text-sm font-bold text-primary">{Math.round(skillMatchPercentage)}%</p>
+                    </div>
+                    <Progress value={skillMatchPercentage} className="h-2" />
                 </div>
-                <InfoRow 
-                    label="CADD Score" 
-                    value={
-                        <div className="flex items-center gap-1.5">
-                           <Star className="h-4 w-4 text-primary fill-current" />
-                           <span className="font-bold text-base">{candidate.caddScore}</span>
-                        </div>
-                    } 
-                />
+
+                <div>
+                    <h4 className="text-sm font-semibold mb-2">Required Skills ({candidate.topics.length})</h4>
+                    <div className="flex flex-wrap gap-2">
+                        {candidate.topics.map(topic => (
+                            <Badge key={topic} variant="outline">{topic}</Badge>
+                        ))}
+                    </div>
+                </div>
+
+                <div>
+                    <h4 className="text-sm font-semibold mb-2">Employee Skills ({candidate.skills.length})</h4>
+                    <div className="flex flex-wrap gap-2">
+                        {candidate.skills.map(skill => {
+                            const isMatch = candidate.topics.includes(skill);
+                            return (
+                                <Badge key={skill} variant={isMatch ? 'default' : 'secondary'} className={`flex items-center gap-1.5 ${isMatch ? 'bg-green-100 text-green-800 border-green-300' : ''}`}>
+                                  {isMatch ? <Check className="h-3 w-3"/> : <X className="h-3 w-3 text-muted-foreground"/>}
+                                  {skill}
+                                </Badge>
+                            );
+                        })}
+                    </div>
+                </div>
             </div>
         </div>
+
+        <Separator />
+        
+        <InfoRow 
+            label="CADD Score" 
+            value={
+                <div className="flex items-center gap-1.5">
+                   <Star className="h-4 w-4 text-primary fill-current" />
+                   <span className="font-bold text-base">{candidate.caddScore}</span>
+                </div>
+            } 
+        />
 
         <IntelligentMatching candidateSkills={candidate.skills} listedTopics={candidate.topics} />
 
