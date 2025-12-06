@@ -158,7 +158,7 @@ export function TalentTrackClientPage() {
                       max={100}
                       step={1}
                       onValueChange={(value) => setCaddScoreFilter(value)}
-                      className="mt-3"
+                      className="mt-1 pt-2"
                     />
                   </div>
                 </div>
