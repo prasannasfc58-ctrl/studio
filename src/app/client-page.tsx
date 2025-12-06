@@ -26,7 +26,8 @@ export function TalentTrackClientPage() {
 
   useEffect(() => {
     if (candidates.length > 0) {
-      setSelectedCandidateId(candidates[0].id);
+      const sortedCandidates = candidates.sort((a, b) => a.name.localeCompare(b.name));
+      setSelectedCandidateId(sortedCandidates[0].id);
     }
   }, []);
 
@@ -101,13 +102,10 @@ export function TalentTrackClientPage() {
                   <h2 className="text-2xl font-bold">Employee Directory</h2>
                   <p className="text-muted-foreground">Manage your team and their information.</p>
                 </div>
-                <Button>
-                  <UserPlus className="mr-2 h-4 w-4" /> Add Employee
-                </Button>
               </div>
 
               {/* Filters */}
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4 items-end">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6 items-end">
                 <div className="relative w-full">
                   <Label htmlFor="search-name">Filter by Name</Label>
                   <Search className="absolute left-3 top-[2.3rem] -translate-y-1/2 h-4 w-4 text-muted-foreground" />
@@ -150,28 +148,13 @@ export function TalentTrackClientPage() {
                  <div>
                    <Label>CADD Score: {caddScoreFilter[0]} - {caddScoreFilter[1]}</Label>
                    <Slider
-                    defaultValue={[0, 100]}
+                    value={caddScoreFilter}
                     min={0}
                     max={100}
                     step={1}
                     onValueChange={(value) => setCaddScoreFilter(value)}
                     className="mt-3"
                   />
-                </div>
-              </div>
-
-              <div className="flex justify-end items-center mb-4">
-                <div className="flex items-center gap-2">
-                  <span className="text-sm text-muted-foreground">Sort by:</span>
-                  <Select value={sortOrder} onValueChange={setSortOrder}>
-                    <SelectTrigger className="w-[180px]">
-                      <SelectValue placeholder="Sort by" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="Alphabetical A-Z">Alphabetical A-Z</SelectItem>
-                      <SelectItem value="Alphabetical Z-A">Alphabetical Z-A</SelectItem>
-                    </SelectContent>
-                  </Select>
                 </div>
               </div>
 
