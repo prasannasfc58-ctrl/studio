@@ -173,15 +173,15 @@ export function TalentTrackClientPage() {
 
           <div className="flex flex-1 overflow-hidden">
             {/* Employee Directory */}
-            <main className="flex-1 p-2 md:p-6 overflow-y-auto">
-              <Card className="h-full">
+            <main className="flex-1 p-2 md:p-6 flex flex-col">
+              <Card className="h-full flex flex-col">
                 <CardHeader>
                     <CardTitle>Employee Directory</CardTitle>
                     <p className="text-muted-foreground text-sm">Manage your team and their information.</p>
                 </CardHeader>
-                <CardContent>
+                <CardContent className="flex flex-col flex-1">
                   {/* Filters */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6 items-end">
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 pb-6 items-end">
                     <div>
                       <Label htmlFor="search-name">Filter by Name</Label>
                       <div className="relative mt-1">
@@ -235,12 +235,13 @@ export function TalentTrackClientPage() {
                       />
                     </div>
                   </div>
-
-                  <EmployeeTable
-                    candidates={filteredAndSortedCandidates}
-                    selectedCandidateId={selectedCandidateId}
-                    onSelectCandidate={handleSelectCandidate}
-                  />
+                  <div className="flex-1 overflow-y-auto border rounded-lg">
+                    <EmployeeTable
+                      candidates={filteredAndSortedCandidates}
+                      selectedCandidateId={selectedCandidateId}
+                      onSelectCandidate={handleSelectCandidate}
+                    />
+                  </div>
                 </CardContent>
               </Card>
             </main>
