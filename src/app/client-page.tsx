@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useMemo, useEffect } from 'react';
-import { candidates } from '@/lib/data';
+import { candidates as initialCandidates } from '@/lib/data';
 import { CandidateDetails } from '@/components/candidate-details';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -13,11 +13,13 @@ import { EmployeeTable } from '@/components/employee-table';
 import { Slider } from '@/components/ui/slider';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import type { Candidate } from '@/lib/types';
 
-const allCourses = Array.from(new Set(candidates.flatMap(c => c.courses)));
-const allStatuses = Array.from(new Set(candidates.map(c => c.status)));
+const allCourses = Array.from(new Set(initialCandidates.flatMap(c => c.courses)));
+const allStatuses = Array.from(new Set(initialCandidates.map(c => c.status)));
 
 export function TalentTrackClientPage() {
+  const [candidates, setCandidates] = useState<Candidate[]>(initialCandidates);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCandidateId, setSelectedCandidateId] = useState<string | null>(null);
   const [statusFilter, setStatusFilter] = useState('All');
@@ -39,10 +41,10 @@ export function TalentTrackClientPage() {
         courseFilter === 'All' || candidate.courses.includes(courseFilter)
       )
       .sort((a, b) => a.name.localeCompare(b.name));
-  }, [searchTerm, statusFilter, caddScoreFilter, courseFilter]);
+  }, [candidates, searchTerm, statusFilter, caddScoreFilter, courseFilter]);
 
   useEffect(() => {
-    if (candidates.length > 0) {
+    if (initialCandidates.length > 0) {
       if (filteredAndSortedCandidates.length > 0) {
         setSelectedCandidateId(filteredAndSortedCandidates[0].id);
       } else {
@@ -63,7 +65,15 @@ export function TalentTrackClientPage() {
   
   const selectedCandidate = useMemo(() => {
     return candidates.find(c => c.id === selectedCandidateId) || null;
-  }, [selectedCandidateId]);
+  }, [candidates, selectedCandidateId]);
+
+  const handleStatusChange = (candidateId: string, newStatus: Candidate['status']) => {
+    setCandidates(prevCandidates =>
+      prevCandidates.map(c =>
+        c.id === candidateId ? { ...c, status: newStatus } : c
+      )
+    );
+  };
 
   return (
     <div className="flex h-screen bg-background">
@@ -174,7 +184,10 @@ export function TalentTrackClientPage() {
 
           {/* Candidate Details Panel */}
           <aside className="w-1/3 min-w-[350px] max-w-[450px] border-l bg-card overflow-y-auto p-6">
-            <CandidateDetails candidate={selectedCandidate} />
+            <CandidateDetails 
+              candidate={selectedCandidate}
+              onStatusChange={handleStatusChange} 
+            />
           </aside>
         </div>
       </div>
