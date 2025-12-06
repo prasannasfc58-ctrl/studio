@@ -3,33 +3,19 @@
 
 import { useState, useMemo, useEffect } from 'react';
 import { candidates as initialCandidates } from '@/lib/data';
-import { CandidateDetails } from '@/components/candidate-details';
-import { Input } from '@/components/ui/input';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Search, Briefcase, FileText, MessageSquare, Menu, X } from 'lucide-react';
-import { Logo } from '@/components/logo';
-import { Button } from '@/components/ui/button';
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { EmployeeTable } from '@/components/employee-table';
-import { Slider } from '@/components/ui/slider';
-import { Label } from '@/components/ui/label';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import type { Candidate } from '@/lib/types';
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog"
-import { EditStatusDialog } from '@/components/edit-status-dialog';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { X, Menu } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent } from '@/components/ui/sheet';
-import { cn } from '@/lib/utils';
-
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
+import { EditStatusDialog } from '@/components/edit-status-dialog';
+import { EmployeeTable } from '@/components/employee-table';
+import { CandidateDetails } from '@/components/candidate-details';
+import { Header } from '@/components/header';
+import { Sidebar } from '@/components/sidebar';
+import { Filters } from '@/components/filters';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 const allCourses = Array.from(new Set(initialCandidates.flatMap(c => c.courses)));
 const allStatuses: Candidate['status'][] = ['On Hold', 'Selected', 'Rejected'];
@@ -45,7 +31,6 @@ export function TalentTrackClientPage() {
   const [editStatusCandidate, setEditStatusCandidate] = useState<Candidate | null>(null);
   const [isNavOpen, setIsNavOpen] = useState(false);
   const isMobile = useIsMobile();
-
 
   const filteredAndSortedCandidates = useMemo(() => {
     return candidates
@@ -125,116 +110,34 @@ export function TalentTrackClientPage() {
     setSelectedCandidateId(candidateId);
   }
 
-
   return (
     <>
       <div className="flex h-screen bg-background">
-        {/* Navigation Sidebar */}
-        <nav className={cn(
-          "bg-card border-r flex-col items-center py-4 space-y-6",
-          "hidden md:flex md:w-20",
-          isNavOpen && "flex w-full absolute z-40 h-full"
-          )}>
-          <Logo />
-          <div className="flex flex-col space-y-4">
-            <Button variant="ghost" size="icon" className="text-primary bg-primary/10 rounded-lg">
-              <Briefcase className="h-6 w-6" />
-            </Button>
-            <Button variant="ghost" size="icon" className="text-muted-foreground">
-              <FileText className="h-6 w-6" />
-            </Button>
-            <Button variant="ghost" size="icon" className="text-muted-foreground">
-              <MessageSquare className="h-6 w-6" />
-            </Button>
-          </div>
-        </nav>
+        <Sidebar isNavOpen={isNavOpen} />
 
-        {/* Main Content */}
         <div className="flex-1 flex flex-col">
-          <header className="flex items-center justify-between h-16 px-6 border-b bg-card">
-            <div className="flex items-center gap-4">
-              <Button variant="ghost" size="icon" className="md:hidden" onClick={() => setIsNavOpen(!isNavOpen)}>
-                {isNavOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-              </Button>
-              <h1 className="text-xl font-semibold">Employees</h1>
-            </div>
-            <div className="flex items-center gap-4">
-              <div className="hidden md:flex items-center gap-4">
-                <span className="text-sm text-muted-foreground">Employees</span>
-                <span className="text-sm text-muted-foreground">Documents</span>
-                <span className="text-sm text-muted-foreground">Message</span>
-              </div>
-              <Avatar className="h-9 w-9">
-                <AvatarImage src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHxtYW4lMjBwb3J0cmFpdHxlbnwwfHx8fDE3NjQ5NzY5OTN8MA&ixlib=rb-4.1.0&q=80&w=1080" alt="User" />
-                <AvatarFallback>U</AvatarFallback>
-              </Avatar>
-            </div>
-          </header>
+          <Header onNavToggle={() => setIsNavOpen(!isNavOpen)} isNavOpen={isNavOpen} />
 
           <div className="flex flex-1 overflow-hidden">
-            {/* Employee Directory */}
             <main className="flex-1 p-2 md:p-6 flex flex-col">
               <Card className="h-full flex flex-col">
                 <CardHeader>
-                    <CardTitle>Employee Directory</CardTitle>
-                    <p className="text-muted-foreground text-sm">Manage your team and their information.</p>
+                  <CardTitle>Employee Directory</CardTitle>
+                  <p className="text-muted-foreground text-sm">Manage your team and their information.</p>
                 </CardHeader>
                 <CardContent className="flex flex-col flex-1 min-h-0">
-                  {/* Filters */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 pb-6 items-end">
-                    <div>
-                      <Label htmlFor="search-name">Filter by Name</Label>
-                      <div className="relative mt-1">
-                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                        <Input
-                          id="search-name"
-                          placeholder="e.g. Elena Vance"
-                          className="pl-10"
-                          value={searchTerm}
-                          onChange={(e) => setSearchTerm(e.target.value)}
-                        />
-                      </div>
-                    </div>
-                    <div>
-                      <Label htmlFor="status-filter">Status</Label>
-                      <Select value={statusFilter} onValueChange={setStatusFilter}>
-                        <SelectTrigger id="status-filter" className="w-full mt-1">
-                          <SelectValue placeholder="Filter by Status" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="All">All Statuses</SelectItem>
-                          {allStatuses.map(status => (
-                            <SelectItem key={status} value={status}>{status}</SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
-                    <div>
-                      <Label htmlFor="course-filter">Course</Label>
-                      <Select value={courseFilter} onValueChange={setCourseFilter}>
-                        <SelectTrigger id="course-filter" className="w-full mt-1">
-                          <SelectValue placeholder="Filter by Course" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="All">All Courses</SelectItem>
-                          {allCourses.map(course => (
-                            <SelectItem key={course} value={course}>{course}</SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
-                    <div>
-                      <Label>Skills Percentage: {skillPercentageFilter[0]}% - {skillPercentageFilter[1]}%</Label>
-                      <Slider
-                        value={skillPercentageFilter}
-                        min={0}
-                        max={100}
-                        step={1}
-                        onValueChange={(value) => setSkillPercentageFilter(value)}
-                        className="mt-1 pt-2"
-                      />
-                    </div>
-                  </div>
+                  <Filters
+                    searchTerm={searchTerm}
+                    setSearchTerm={setSearchTerm}
+                    statusFilter={statusFilter}
+                    setStatusFilter={setStatusFilter}
+                    allStatuses={allStatuses}
+                    courseFilter={courseFilter}
+                    setCourseFilter={setCourseFilter}
+                    allCourses={allCourses}
+                    skillPercentageFilter={skillPercentageFilter}
+                    setSkillPercentageFilter={setSkillPercentageFilter}
+                  />
                   <div className="flex-1 overflow-y-auto border rounded-lg">
                     <EmployeeTable
                       candidates={filteredAndSortedCandidates}
@@ -246,7 +149,6 @@ export function TalentTrackClientPage() {
               </Card>
             </main>
 
-            {/* Candidate Details Panel - Desktop */}
             {!isMobile && (
               <aside className="w-1/3 min-w-[350px] max-w-[450px] border-l bg-card overflow-y-auto p-6">
                 <CandidateDetails 
@@ -260,22 +162,20 @@ export function TalentTrackClientPage() {
         </div>
       </div>
       
-      {/* Candidate Details Sheet - Mobile */}
       {isMobile && (
         <Sheet open={!!selectedCandidate} onOpenChange={(open) => !open && setSelectedCandidateId(null)}>
-            <SheetContent side="right" className="p-0 w-full max-w-full sm:max-w-full">
-              <div className="overflow-y-auto h-full p-6">
-                <CandidateDetails
-                  candidate={selectedCandidate}
-                  onStatusChange={handleStatusChangeRequest}
-                  onEditStatus={openEditStatusDialog}
-                />
-              </div>
-            </SheetContent>
+          <SheetContent side="right" className="p-0 w-full max-w-full sm:max-w-full">
+            <div className="overflow-y-auto h-full p-6">
+              <CandidateDetails
+                candidate={selectedCandidate}
+                onStatusChange={handleStatusChangeRequest}
+                onEditStatus={openEditStatusDialog}
+              />
+            </div>
+          </SheetContent>
         </Sheet>
       )}
       
-      {/* Confirmation Dialog */}
       <AlertDialog open={!!confirmation?.isOpen} onOpenChange={() => cancelStatusChange()}>
         <AlertDialogContent>
           <AlertDialogHeader>
@@ -291,7 +191,6 @@ export function TalentTrackClientPage() {
         </AlertDialogContent>
       </AlertDialog>
       
-      {/* Edit Status Dialog */}
       <EditStatusDialog
         candidate={editStatusCandidate}
         onOpenChange={() => setEditStatusCandidate(null)}
