@@ -49,7 +49,7 @@ export function TalentTrackClientPage() {
         setSelectedCandidateId(null);
       }
     }
-  }, []);
+  }, [filteredAndSortedCandidates]);
 
   useEffect(() => {
     if (filteredAndSortedCandidates.length > 0) {
@@ -109,16 +109,18 @@ export function TalentTrackClientPage() {
               <CardContent>
                 {/* Filters */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6 items-end">
-                  <div className="relative w-full">
+                  <div className="relative">
                     <Label htmlFor="search-name">Filter by Name</Label>
-                    <Search className="absolute left-3 top-[2.3rem] -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                    <Input
-                      id="search-name"
-                      placeholder="e.g. Elena Vance"
-                      className="pl-10 mt-1"
-                      value={searchTerm}
-                      onChange={(e) => setSearchTerm(e.target.value)}
-                    />
+                    <div className="relative mt-1">
+                      <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                      <Input
+                        id="search-name"
+                        placeholder="e.g. Elena Vance"
+                        className="pl-10"
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                      />
+                    </div>
                   </div>
                   <div>
                     <Label htmlFor="status-filter">Status</Label>
