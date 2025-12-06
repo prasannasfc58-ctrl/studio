@@ -3,14 +3,17 @@
 import type { Candidate } from '@/lib/types';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Separator } from '@/components/ui/separator';
-import { Star, MapPin, Linkedin, Briefcase, GraduationCap, Check, X, Pause } from 'lucide-react';
+import { Star, MapPin, Linkedin, Briefcase, GraduationCap, Check, X, Pause, Pencil } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
+
 
 interface CandidateDetailsProps {
   candidate: Candidate | null;
   onStatusChange: (candidateId: string, newStatus: Candidate['status']) => void;
+  onEditStatus: (candidate: Candidate) => void;
 }
 
 const InfoRow = ({ label, value, icon }: { label: string, value: React.ReactNode, icon?: React.ReactNode }) => (
@@ -20,8 +23,19 @@ const InfoRow = ({ label, value, icon }: { label: string, value: React.ReactNode
     </div>
 );
 
+const SelectedBadge = () => (
+    <div className="relative inline-flex items-center justify-center">
+        <div className="absolute inset-0 flex items-center justify-center">
+            <div className="w-12 h-12 rounded-full bg-green-100 animate-ping"></div>
+        </div>
+        <div className="relative w-16 h-16 rounded-full bg-green-200 flex items-center justify-center">
+            <Check className="h-8 w-8 text-green-700" />
+        </div>
+    </div>
+);
 
-export function CandidateDetails({ candidate, onStatusChange }: CandidateDetailsProps) {
+
+export function CandidateDetails({ candidate, onStatusChange, onEditStatus }: CandidateDetailsProps) {
   if (!candidate) {
     return (
       <div className="flex h-full items-center justify-center text-center">
@@ -51,30 +65,29 @@ export function CandidateDetails({ candidate, onStatusChange }: CandidateDetails
         );
       case 'Selected':
         return (
-          <div className="flex justify-center gap-2 mt-4">
-            <Button size="sm" className="bg-green-500 hover:bg-green-600 text-white flex-1">
-              <Check className="mr-2 h-4 w-4" /> Selected
-            </Button>
-            <Button size="sm" variant="destructive" onClick={() => onStatusChange(candidate.id, 'Rejected')}>
-              <X className="mr-2 h-4 w-4" />
-            </Button>
-            <Button size="sm" variant="secondary" onClick={() => onStatusChange(candidate.id, 'On Hold')}>
-              <Pause className="mr-2 h-4 w-4" />
-            </Button>
+          <div className="mt-4 text-center">
+            <SelectedBadge />
+            <div className="flex items-center justify-center gap-2 mt-4">
+              <Badge className="bg-green-100 text-green-800 border-green-300 text-base py-2 px-4">
+                  <Check className="mr-2 h-4 w-4" /> Selected
+              </Badge>
+              <Button variant="ghost" size="icon" onClick={() => onEditStatus(candidate)}>
+                  <Pencil className="h-4 w-4 text-muted-foreground" />
+              </Button>
+            </div>
           </div>
         );
       case 'Rejected':
         return (
-          <div className="flex justify-center gap-2 mt-4">
-            <Button size="sm" variant="destructive" className="flex-1">
-              <X className="mr-2 h-4 w-4" /> Rejected
-            </Button>
-            <Button size="sm" className="bg-green-500 hover:bg-green-600 text-white" onClick={() => onStatusChange(candidate.id, 'Selected')}>
-              <Check className="mr-2 h-4 w-4" />
-            </Button>
-             <Button size="sm" variant="secondary" onClick={() => onStatusChange(candidate.id, 'On Hold')}>
-              <Pause className="mr-2 h-4 w-4" />
-            </Button>
+          <div className="mt-4 flex flex-col items-center">
+            <div className="flex items-center justify-center gap-2">
+                <Badge variant="destructive" className="text-base py-2 px-4">
+                    <X className="mr-2 h-4 w-4" /> Rejected
+                </Badge>
+                <Button variant="ghost" size="icon" onClick={() => onEditStatus(candidate)}>
+                    <Pencil className="h-4 w-4 text-muted-foreground" />
+                </Button>
+            </div>
           </div>
         );
       default:
@@ -94,10 +107,6 @@ export function CandidateDetails({ candidate, onStatusChange }: CandidateDetails
         {candidate.experience.length > 0 && (
           <p className="text-muted-foreground">{candidate.experience[0].role}</p>
         )}
-        <div className="flex items-center gap-2 mt-2">
-            <MapPin className="h-4 w-4 text-muted-foreground" />
-            <span className="text-muted-foreground">{candidate.location}</span>
-        </div>
       </div>
 
       {renderStatusButtons()}
