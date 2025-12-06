@@ -5,34 +5,27 @@ import { candidates } from '@/lib/data';
 import { CandidateDetails } from '@/components/candidate-details';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Search, UserPlus, Briefcase, FileText, MessageSquare } from 'lucide-react';
+import { Search, Briefcase, FileText, MessageSquare } from 'lucide-react';
 import { Logo } from '@/components/logo';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { EmployeeTable } from '@/components/employee-table';
 import { Slider } from '@/components/ui/slider';
 import { Label } from '@/components/ui/label';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 const allCourses = Array.from(new Set(candidates.flatMap(c => c.courses)));
 const allStatuses = Array.from(new Set(candidates.map(c => c.status)));
 
 export function TalentTrackClientPage() {
   const [searchTerm, setSearchTerm] = useState('');
-  const [sortOrder, setSortOrder] = useState('Alphabetical A-Z');
   const [selectedCandidateId, setSelectedCandidateId] = useState<string | null>(null);
   const [statusFilter, setStatusFilter] = useState('All');
   const [caddScoreFilter, setCaddScoreFilter] = useState([0, 100]);
   const [courseFilter, setCourseFilter] = useState('All');
 
-  useEffect(() => {
-    if (candidates.length > 0) {
-      const sortedCandidates = candidates.sort((a, b) => a.name.localeCompare(b.name));
-      setSelectedCandidateId(sortedCandidates[0].id);
-    }
-  }, []);
-
   const filteredAndSortedCandidates = useMemo(() => {
-    const filtered = candidates
+    return candidates
       .filter(candidate =>
         candidate.name.toLowerCase().includes(searchTerm.toLowerCase())
       )
@@ -44,17 +37,29 @@ export function TalentTrackClientPage() {
       )
       .filter(candidate =>
         courseFilter === 'All' || candidate.courses.includes(courseFilter)
-      );
+      )
+      .sort((a, b) => a.name.localeCompare(b.name));
+  }, [searchTerm, statusFilter, caddScoreFilter, courseFilter]);
 
-    return filtered.sort((a, b) => {
-      if (sortOrder === 'Alphabetical A-Z') {
-        return a.name.localeCompare(b.name);
-      } else if (sortOrder === 'Alphabetical Z-A') {
-        return b.name.localeCompare(a.name);
+  useEffect(() => {
+    if (candidates.length > 0) {
+      if (filteredAndSortedCandidates.length > 0) {
+        setSelectedCandidateId(filteredAndSortedCandidates[0].id);
+      } else {
+        setSelectedCandidateId(null);
       }
-      return 0;
-    });
-  }, [searchTerm, sortOrder, statusFilter, caddScoreFilter, courseFilter]);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (filteredAndSortedCandidates.length > 0) {
+      if (!selectedCandidateId || !filteredAndSortedCandidates.find(c => c.id === selectedCandidateId)) {
+        setSelectedCandidateId(filteredAndSortedCandidates[0].id);
+      }
+    } else {
+      setSelectedCandidateId(null);
+    }
+  }, [filteredAndSortedCandidates, selectedCandidateId]);
   
   const selectedCandidate = useMemo(() => {
     return candidates.find(c => c.id === selectedCandidateId) || null;
@@ -66,7 +71,7 @@ export function TalentTrackClientPage() {
       <nav className="w-20 bg-card border-r flex flex-col items-center py-4 space-y-6">
         <Logo />
         <div className="flex flex-col space-y-4">
-          <Button variant="ghost" size="icon" className="text-primary bg-primary/10">
+          <Button variant="ghost" size="icon" className="text-primary bg-primary/10 rounded-lg">
             <Briefcase className="h-6 w-6" />
           </Button>
           <Button variant="ghost" size="icon" className="text-muted-foreground">
@@ -96,74 +101,73 @@ export function TalentTrackClientPage() {
         <div className="flex flex-1 overflow-hidden">
           {/* Employee Directory */}
           <main className="flex-1 p-6 overflow-y-auto">
-            <div className="bg-card rounded-lg shadow-sm p-6">
-              <div className="flex justify-between items-center mb-6">
-                <div>
-                  <h2 className="text-2xl font-bold">Employee Directory</h2>
-                  <p className="text-muted-foreground">Manage your team and their information.</p>
+            <Card className="h-full">
+              <CardHeader>
+                  <CardTitle>Employee Directory</CardTitle>
+                  <p className="text-muted-foreground text-sm">Manage your team and their information.</p>
+              </CardHeader>
+              <CardContent>
+                {/* Filters */}
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6 items-end">
+                  <div className="relative w-full">
+                    <Label htmlFor="search-name">Filter by Name</Label>
+                    <Search className="absolute left-3 top-[2.3rem] -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                    <Input
+                      id="search-name"
+                      placeholder="e.g. Elena Vance"
+                      className="pl-10 mt-1"
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="status-filter">Status</Label>
+                    <Select value={statusFilter} onValueChange={setStatusFilter}>
+                      <SelectTrigger id="status-filter" className="w-full mt-1">
+                        <SelectValue placeholder="Filter by Status" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="All">All Statuses</SelectItem>
+                        {allStatuses.map(status => (
+                          <SelectItem key={status} value={status}>{status}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div>
+                    <Label htmlFor="course-filter">Course</Label>
+                    <Select value={courseFilter} onValueChange={setCourseFilter}>
+                      <SelectTrigger id="course-filter" className="w-full mt-1">
+                        <SelectValue placeholder="Filter by Course" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="All">All Courses</SelectItem>
+                        {allCourses.map(course => (
+                          <SelectItem key={course} value={course}>{course}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div>
+                    <Label>CADD Score: {caddScoreFilter[0]} - {caddScoreFilter[1]}</Label>
+                    <Slider
+                      value={caddScoreFilter}
+                      min={0}
+                      max={100}
+                      step={1}
+                      onValueChange={(value) => setCaddScoreFilter(value)}
+                      className="mt-3"
+                    />
+                  </div>
                 </div>
-              </div>
 
-              {/* Filters */}
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6 items-end">
-                <div className="relative w-full">
-                  <Label htmlFor="search-name">Filter by Name</Label>
-                  <Search className="absolute left-3 top-[2.3rem] -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                  <Input
-                    id="search-name"
-                    placeholder="e.g. Elena Vance"
-                    className="pl-10 mt-1"
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="status-filter">Status</Label>
-                   <Select value={statusFilter} onValueChange={setStatusFilter}>
-                    <SelectTrigger id="status-filter" className="w-full mt-1">
-                      <SelectValue placeholder="Filter by Status" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="All">All Statuses</SelectItem>
-                      {allStatuses.map(status => (
-                        <SelectItem key={status} value={status}>{status}</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-                 <div>
-                  <Label htmlFor="course-filter">Course</Label>
-                   <Select value={courseFilter} onValueChange={setCourseFilter}>
-                    <SelectTrigger id="course-filter" className="w-full mt-1">
-                      <SelectValue placeholder="Filter by Course" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="All">All Courses</SelectItem>
-                      {allCourses.map(course => (
-                        <SelectItem key={course} value={course}>{course}</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-                 <div>
-                   <Label>CADD Score: {caddScoreFilter[0]} - {caddScoreFilter[1]}</Label>
-                   <Slider
-                    value={caddScoreFilter}
-                    min={0}
-                    max={100}
-                    step={1}
-                    onValueChange={(value) => setCaddScoreFilter(value)}
-                    className="mt-3"
-                  />
-                </div>
-              </div>
-
-              <EmployeeTable
-                candidates={filteredAndSortedCandidates}
-                selectedCandidateId={selectedCandidateId}
-                onSelectCandidate={setSelectedCandidateId}
-              />
-            </div>
+                <EmployeeTable
+                  candidates={filteredAndSortedCandidates}
+                  selectedCandidateId={selectedCandidateId}
+                  onSelectCandidate={setSelectedCandidateId}
+                />
+              </CardContent>
+            </Card>
           </main>
 
           {/* Candidate Details Panel */}
