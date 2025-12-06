@@ -4,6 +4,7 @@ export type Candidate = {
   avatar: string;
   email: string;
   phone: string;
+  linkedin: string;
   location: string;
   status: 'Available' | 'Interviewing' | 'Hired';
   courses: string[];
@@ -11,4 +12,15 @@ export type Candidate = {
   skills: string[];
   topics: string[];
   summary: string;
+  education: {
+    institution: string;
+    degree: string;
+    years: string;
+  }[];
+  experience: {
+    company: string;
+    role: string;
+    years: string;
+    description: string;
+  }[];
 };

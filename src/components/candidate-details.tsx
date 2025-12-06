@@ -1,11 +1,9 @@
 "use client";
 
 import type { Candidate } from '@/lib/types';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Separator } from '@/components/ui/separator';
-import { Star, MapPin } from 'lucide-react';
-import { IntelligentMatching } from './intelligent-matching';
+import { Star, MapPin, Linkedin, Briefcase, GraduationCap } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 
@@ -13,9 +11,9 @@ interface CandidateDetailsProps {
   candidate: Candidate | null;
 }
 
-const InfoRow = ({ label, value }: { label: string, value: React.ReactNode }) => (
+const InfoRow = ({ label, value, icon }: { label: string, value: React.ReactNode, icon?: React.ReactNode }) => (
     <div className="flex justify-between items-start text-sm py-1">
-        <p className="text-muted-foreground">{label}</p>
+        <p className="text-muted-foreground flex items-center gap-2">{icon}{label}</p>
         <div className="font-medium text-foreground text-right">{value}</div>
     </div>
 );
@@ -58,6 +56,10 @@ export function CandidateDetails({ candidate }: CandidateDetailsProps) {
             <div className="space-y-1">
                 <InfoRow label="Phone" value={candidate.phone} />
                 <InfoRow label="Email" value={<a href={`mailto:${candidate.email}`} className="text-primary hover:underline">{candidate.email}</a>} />
+                <InfoRow 
+                    label="LinkedIn" 
+                    value={<a href={`https://${candidate.linkedin}`} target="_blank" rel="noopener noreferrer" className="text-primary hover:underline flex items-center gap-1 justify-end">{candidate.linkedin} <Linkedin className="h-4 w-4" /></a>}
+                />
             </div>
         </div>
         
@@ -104,6 +106,43 @@ export function CandidateDetails({ candidate }: CandidateDetailsProps) {
 
         <Separator />
         
+        <div>
+            <h3 className="font-semibold mb-4 flex items-center gap-2">
+              <Briefcase className="h-5 w-5 text-primary" />
+              Experience
+            </h3>
+            <div className="space-y-4">
+              {candidate.experience.map((exp, index) => (
+                <div key={index} className="pl-2 relative">
+                  <div className="absolute left-0 h-full w-0.5 bg-border -translate-x-1.5"></div>
+                   <div className="absolute left-0 top-1 w-2 h-2 rounded-full bg-primary -translate-x-2"></div>
+                  <p className="font-semibold">{exp.role}</p>
+                  <p className="text-sm text-muted-foreground">{exp.company} • {exp.years}</p>
+                  <p className="text-sm mt-1">{exp.description}</p>
+                </div>
+              ))}
+            </div>
+        </div>
+
+        <Separator />
+        
+        <div>
+            <h3 className="font-semibold mb-4 flex items-center gap-2">
+              <GraduationCap className="h-5 w-5 text-primary" />
+              Education
+            </h3>
+            <div className="space-y-3">
+              {candidate.education.map((edu, index) => (
+                <div key={index}>
+                  <p className="font-semibold">{edu.institution}</p>
+                  <p className="text-sm text-muted-foreground">{edu.degree} • {edu.years}</p>
+                </div>
+              ))}
+            </div>
+        </div>
+
+        <Separator />
+        
         <InfoRow 
             label="CADD Score" 
             value={
@@ -113,9 +152,6 @@ export function CandidateDetails({ candidate }: CandidateDetailsProps) {
                 </div>
             } 
         />
-
-        <IntelligentMatching candidateSkills={candidate.skills} listedTopics={candidate.topics} />
-
     </div>
   );
 }
