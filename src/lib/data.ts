@@ -18,7 +18,7 @@ export const candidates: Candidate[] = [
     courses: ['Advanced React', 'State Management Patterns'],
     caddScore: 85,
     skills: ['React', 'TypeScript', 'Node.js', 'GraphQL', 'Jest'],
-    topics: ['React', 'TypeScript', 'Node.js', 'Component Libraries'],
+    topics: ['React', 'TypeScript', 'Node.js', 'GraphQL'],
     summary: 'Senior Frontend Engineer with 8 years of experience in building scalable web applications. Passionate about clean code and user experience.'
   },
   {
@@ -31,7 +31,7 @@ export const candidates: Candidate[] = [
     status: 'Interviewing',
     courses: ['Cloud Native Go', 'Microservices Architecture'],
     caddScore: 92,
-    skills: ['Go', 'Kubernetes', 'Docker', 'PostgreSQL', 'gRPC'],
+    skills: ['Go', 'Kubernetes', 'Docker', 'PostgreSQL', 'gRPC', 'DevOps Automation'],
     topics: ['Distributed Systems', 'Backend Scalability', 'DevOps Automation'],
     summary: 'Backend developer specializing in cloud-native technologies and distributed systems. Proven track record of designing and deploying robust microservices.'
   },
@@ -45,7 +45,7 @@ export const candidates: Candidate[] = [
     status: 'Available',
     courses: ['UI/UX Design Principles', 'Figma for UI Design'],
     caddScore: 78,
-    skills: ['Figma', 'Sketch', 'Adobe XD', 'User Research', 'Prototyping'],
+    skills: ['Figma', 'Sketch', 'Adobe XD', 'User Research', 'Prototyping', 'Design Systems'],
     topics: ['Design Systems', 'User-Centered Design', 'Mobile App UX'],
     summary: 'Creative UI/UX designer with a strong focus on creating intuitive and visually appealing digital experiences. Proficient in all stages of the design process.'
   },
@@ -59,7 +59,7 @@ export const candidates: Candidate[] = [
     status: 'Hired',
     courses: ['Machine Learning with Python', 'Deep Learning Specialization'],
     caddScore: 95,
-    skills: ['Python', 'TensorFlow', 'PyTorch', 'scikit-learn', 'Pandas'],
+    skills: ['Python', 'TensorFlow', 'PyTorch', 'scikit-learn', 'Pandas', 'Natural Language Processing'],
     topics: ['Natural Language Processing', 'Computer Vision', 'Recommender Systems'],
     summary: 'Data Scientist with expertise in machine learning and deep learning models. Skilled in turning data into actionable insights.'
   },
@@ -73,7 +73,7 @@ export const candidates: Candidate[] = [
     status: 'Interviewing',
     courses: ['Agile Project Management', 'Certified ScrumMaster'],
     caddScore: 88,
-    skills: ['Agile Methodologies', 'Scrum', 'Jira', 'Product Roadmapping', 'Stakeholder Management'],
+    skills: ['Agile Methodologies', 'Scrum', 'Jira', 'Product Roadmapping', 'Stakeholder Management', 'Team Leadership'],
     topics: ['Lean Product Development', 'Team Leadership', 'Release Planning'],
     summary: 'Experienced Project Manager with a knack for leading cross-functional teams in fast-paced environments. Certified ScrumMaster with a focus on agile principles.'
   },
@@ -87,7 +87,7 @@ export const candidates: Candidate[] = [
     status: 'Available',
     courses: ['Cybersecurity Fundamentals', 'Ethical Hacking'],
     caddScore: 82,
-    skills: ['Network Security', 'Penetration Testing', 'Cryptography', 'Python', 'Wireshark'],
+    skills: ['Network Security', 'Penetration Testing', 'Cryptography', 'Python', 'Wireshark', 'Cloud Security'],
     topics: ['Threat Analysis', 'Incident Response', 'Cloud Security'],
     summary: 'Cybersecurity analyst passionate about protecting digital assets. Experienced in identifying vulnerabilities and implementing robust security measures.'
   }
