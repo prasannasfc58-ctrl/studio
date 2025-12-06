@@ -76,8 +76,18 @@ export function CandidateDetails({ candidate }: CandidateDetailsProps) {
           <div>
               <h4 className="text-sm font-semibold mb-2">Your Skills</h4>
               <div className="flex flex-wrap gap-2">
-                  {matchingSkills.map(skill => (
-                      <Badge key={skill} variant="outline" className="bg-green-100 text-green-800 border-green-200">{skill}</Badge>
+                  {candidate.skills.map(skill => (
+                      <Badge 
+                        key={skill} 
+                        variant="outline" 
+                        className={
+                          matchingSkills.includes(skill)
+                            ? "bg-green-100 text-green-800 border-green-200"
+                            : "bg-muted text-muted-foreground border"
+                        }
+                      >
+                        {skill}
+                      </Badge>
                   ))}
               </div>
           </div>
