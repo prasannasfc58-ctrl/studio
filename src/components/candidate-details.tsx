@@ -23,18 +23,6 @@ const InfoRow = ({ label, value, icon }: { label: string, value: React.ReactNode
     </div>
 );
 
-const SelectedBadge = () => (
-    <div className="relative inline-flex items-center justify-center">
-        <div className="absolute inset-0 flex items-center justify-center">
-            <div className="w-12 h-12 rounded-full bg-green-100 animate-ping"></div>
-        </div>
-        <div className="relative w-16 h-16 rounded-full bg-green-200 flex items-center justify-center">
-            <Check className="h-8 w-8 text-green-700" />
-        </div>
-    </div>
-);
-
-
 export function CandidateDetails({ candidate, onStatusChange, onEditStatus }: CandidateDetailsProps) {
   if (!candidate) {
     return (
@@ -66,8 +54,7 @@ export function CandidateDetails({ candidate, onStatusChange, onEditStatus }: Ca
       case 'Selected':
         return (
           <div className="mt-4 text-center">
-            <SelectedBadge />
-            <div className="flex items-center justify-center gap-2 mt-4">
+            <div className="flex items-center justify-center gap-2">
               <Badge className="bg-green-100 text-green-800 border-green-300 text-base py-2 px-4">
                   <Check className="mr-2 h-4 w-4" /> Selected
               </Badge>
