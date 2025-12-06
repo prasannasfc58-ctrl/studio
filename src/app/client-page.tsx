@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useMemo, useEffect } from 'react';
@@ -10,6 +11,7 @@ import { Search, Filter, X } from 'lucide-react';
 import { Logo } from '@/components/logo';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
+import { SidebarProvider, Sidebar, SidebarHeader, SidebarContent, SidebarTrigger, SidebarInset } from '@/components/ui/sidebar';
 
 export function TalentTrackClientPage() {
   const [searchTerm, setSearchTerm] = useState('');
@@ -46,24 +48,25 @@ export function TalentTrackClientPage() {
   const hasActiveFilters = searchTerm !== '' || statusFilter !== 'all';
 
   return (
-    <div className="flex h-screen flex-col">
-       <header className="flex h-16 items-center border-b bg-card px-4 md:px-6 shrink-0">
-          <div className="flex items-center gap-6 w-full">
+    <SidebarProvider>
+      <Sidebar>
+        <SidebarHeader>
+          <div className="p-2 flex items-center gap-2">
             <Logo />
-            <Separator orientation="vertical" className="h-8" />
-            <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-              <Input
-                placeholder="Search by name or skill..."
-                className="pl-10 w-full max-w-md"
-                value={searchTerm}
-                onChange={e => setSearchTerm(e.target.value)}
-              />
+          </div>
+          <div className="p-2 space-y-2">
+            <div className="relative">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <Input
+                  placeholder="Search..."
+                  className="pl-10 w-full"
+                  value={searchTerm}
+                  onChange={e => setSearchTerm(e.target.value)}
+                />
             </div>
             <div className="flex items-center gap-2">
-                <Filter className="h-4 w-4 text-muted-foreground" />
                 <Select value={statusFilter} onValueChange={setStatusFilter}>
-                    <SelectTrigger className="w-[180px]">
+                    <SelectTrigger>
                         <SelectValue placeholder="Filter by status" />
                     </SelectTrigger>
                     <SelectContent>
@@ -73,45 +76,45 @@ export function TalentTrackClientPage() {
                         ))}
                     </SelectContent>
                 </Select>
-            </div>
-             {hasActiveFilters && (
-                <Button variant="ghost" size="sm" onClick={handleClearFilters}>
-                  <X className="mr-2 h-4 w-4" />
-                  Clear
-                </Button>
-              )}
-          </div>
-        </header>
-        <main className="flex-1 overflow-hidden">
-          <div className="grid h-full grid-cols-1 md:grid-cols-[400px_1fr]">
-              <div className="flex flex-col border-r">
-                <div className="p-4 border-b">
-                  <h2 className="text-lg font-semibold">Candidates ({filteredCandidates.length})</h2>
-                  <p className="text-sm text-muted-foreground">Select a candidate to view details</p>
-                </div>
-                <div className="overflow-y-auto flex-1 p-4 space-y-3">
-                  {filteredCandidates.length > 0 ? (
-                    filteredCandidates.map(candidate => (
-                      <CandidateCard
-                        key={candidate.id}
-                        candidate={candidate}
-                        onSelect={setSelectedCandidateId}
-                        isSelected={selectedCandidateId === candidate.id}
-                      />
-                    ))
-                  ) : (
-                    <div className="text-center text-muted-foreground py-16">
-                      <p>No candidates match your criteria.</p>
-                    </div>
+                 {hasActiveFilters && (
+                    <Button variant="ghost" size="icon" onClick={handleClearFilters} className="shrink-0">
+                      <X className="h-4 w-4" />
+                    </Button>
                   )}
-                </div>
-              </div>
-
-              <div className="overflow-y-auto p-4 bg-muted/30">
-                  <CandidateDetails candidate={selectedCandidate} />
-              </div>
+            </div>
           </div>
-      </main>
-    </div>
+        </SidebarHeader>
+        <SidebarContent>
+          <div className="p-2 border-t">
+            <h2 className="text-base font-semibold">Candidates ({filteredCandidates.length})</h2>
+          </div>
+          <div className="overflow-y-auto flex-1 p-2 space-y-2">
+            {filteredCandidates.length > 0 ? (
+              filteredCandidates.map(candidate => (
+                <CandidateCard
+                  key={candidate.id}
+                  candidate={candidate}
+                  onSelect={setSelectedCandidateId}
+                  isSelected={selectedCandidateId === candidate.id}
+                />
+              ))
+            ) : (
+              <div className="text-center text-muted-foreground py-16">
+                <p>No candidates match your criteria.</p>
+              </div>
+            )}
+          </div>
+        </SidebarContent>
+      </Sidebar>
+      <SidebarInset>
+        <header className="flex h-16 items-center border-b bg-card px-4 md:px-6 shrink-0 gap-4">
+          <SidebarTrigger className="md:hidden" />
+          <h2 className="text-lg font-semibold hidden md:block">Candidate Details</h2>
+        </header>
+        <main className="flex-1 overflow-auto p-4 md:p-6">
+          <CandidateDetails candidate={selectedCandidate} />
+        </main>
+      </SidebarInset>
+    </SidebarProvider>
   );
 }
