@@ -5,16 +5,24 @@ import { candidates } from '@/lib/data';
 import { CandidateDetails } from '@/components/candidate-details';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Search, UserPlus, ChevronsUpDown, MoreHorizontal, FileText, MessageSquare } from 'lucide-react';
+import { Search, UserPlus, Briefcase, FileText, MessageSquare } from 'lucide-react';
 import { Logo } from '@/components/logo';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { EmployeeTable } from '@/components/employee-table';
+import { Slider } from '@/components/ui/slider';
+import { Label } from '@/components/ui/label';
+
+const allCourses = Array.from(new Set(candidates.flatMap(c => c.courses)));
+const allStatuses = Array.from(new Set(candidates.map(c => c.status)));
 
 export function TalentTrackClientPage() {
   const [searchTerm, setSearchTerm] = useState('');
   const [sortOrder, setSortOrder] = useState('Alphabetical A-Z');
   const [selectedCandidateId, setSelectedCandidateId] = useState<string | null>(null);
+  const [statusFilter, setStatusFilter] = useState('All');
+  const [caddScoreFilter, setCaddScoreFilter] = useState([0, 100]);
+  const [courseFilter, setCourseFilter] = useState('All');
 
   useEffect(() => {
     if (candidates.length > 0) {
@@ -23,9 +31,19 @@ export function TalentTrackClientPage() {
   }, []);
 
   const filteredAndSortedCandidates = useMemo(() => {
-    const filtered = candidates.filter(candidate =>
-      candidate.name.toLowerCase().includes(searchTerm.toLowerCase())
-    );
+    const filtered = candidates
+      .filter(candidate =>
+        candidate.name.toLowerCase().includes(searchTerm.toLowerCase())
+      )
+      .filter(candidate => 
+        statusFilter === 'All' || candidate.status === statusFilter
+      )
+      .filter(candidate =>
+        candidate.caddScore >= caddScoreFilter[0] && candidate.caddScore <= caddScoreFilter[1]
+      )
+      .filter(candidate =>
+        courseFilter === 'All' || candidate.courses.includes(courseFilter)
+      );
 
     return filtered.sort((a, b) => {
       if (sortOrder === 'Alphabetical A-Z') {
@@ -35,7 +53,7 @@ export function TalentTrackClientPage() {
       }
       return 0;
     });
-  }, [searchTerm, sortOrder]);
+  }, [searchTerm, sortOrder, statusFilter, caddScoreFilter, courseFilter]);
   
   const selectedCandidate = useMemo(() => {
     return candidates.find(c => c.id === selectedCandidateId) || null;
@@ -78,7 +96,7 @@ export function TalentTrackClientPage() {
           {/* Employee Directory */}
           <main className="flex-1 p-6 overflow-y-auto">
             <div className="bg-card rounded-lg shadow-sm p-6">
-              <div className="flex justify-between items-center mb-4">
+              <div className="flex justify-between items-center mb-6">
                 <div>
                   <h2 className="text-2xl font-bold">Employee Directory</h2>
                   <p className="text-muted-foreground">Manage your team and their information.</p>
@@ -88,16 +106,61 @@ export function TalentTrackClientPage() {
                 </Button>
               </div>
 
-              <div className="flex justify-between items-center mb-4">
-                <div className="relative w-full max-w-xs">
-                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              {/* Filters */}
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4 items-end">
+                <div className="relative w-full">
+                  <Label htmlFor="search-name">Filter by Name</Label>
+                  <Search className="absolute left-3 top-[2.3rem] -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                   <Input
-                    placeholder="Filter by Name"
-                    className="pl-10"
+                    id="search-name"
+                    placeholder="e.g. Elena Vance"
+                    className="pl-10 mt-1"
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                   />
                 </div>
+                <div>
+                  <Label htmlFor="status-filter">Status</Label>
+                   <Select value={statusFilter} onValueChange={setStatusFilter}>
+                    <SelectTrigger id="status-filter" className="w-full mt-1">
+                      <SelectValue placeholder="Filter by Status" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="All">All Statuses</SelectItem>
+                      {allStatuses.map(status => (
+                        <SelectItem key={status} value={status}>{status}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                 <div>
+                  <Label htmlFor="course-filter">Course</Label>
+                   <Select value={courseFilter} onValueChange={setCourseFilter}>
+                    <SelectTrigger id="course-filter" className="w-full mt-1">
+                      <SelectValue placeholder="Filter by Course" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="All">All Courses</SelectItem>
+                      {allCourses.map(course => (
+                        <SelectItem key={course} value={course}>{course}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                 <div>
+                   <Label>CADD Score: {caddScoreFilter[0]} - {caddScoreFilter[1]}</Label>
+                   <Slider
+                    defaultValue={[0, 100]}
+                    min={0}
+                    max={100}
+                    step={1}
+                    onValueChange={(value) => setCaddScoreFilter(value)}
+                    className="mt-3"
+                  />
+                </div>
+              </div>
+
+              <div className="flex justify-end items-center mb-4">
                 <div className="flex items-center gap-2">
                   <span className="text-sm text-muted-foreground">Sort by:</span>
                   <Select value={sortOrder} onValueChange={setSortOrder}>
@@ -128,24 +191,4 @@ export function TalentTrackClientPage() {
       </div>
     </div>
   );
-}
-
-function Briefcase(props: React.ComponentProps<'svg'>) {
-    return (
-        <svg
-            {...props}
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-        >
-            <rect width="20" height="14" x="2" y="7" rx="2" ry="2" />
-            <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" />
-        </svg>
-    )
 }
