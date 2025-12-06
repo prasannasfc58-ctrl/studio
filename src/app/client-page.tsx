@@ -109,7 +109,7 @@ export function TalentTrackClientPage() {
               <CardContent>
                 {/* Filters */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6 items-end">
-                  <div className="relative">
+                  <div>
                     <Label htmlFor="search-name">Filter by Name</Label>
                     <div className="relative mt-1">
                       <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />

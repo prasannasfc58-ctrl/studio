@@ -35,7 +35,8 @@ export function CandidateDetails({ candidate }: CandidateDetailsProps) {
   const skillMatchPercentage = candidate.topics.length > 0 ? (matchingSkills.length / candidate.topics.length) * 100 : 0;
 
   return (
-    <div className="space-y-6">
+    <div className="relative">
+      <div className="sticky top-0 bg-card z-10 pt-1 pb-6 -mt-1">
         <div className="flex flex-col items-center text-center">
           <Avatar className="h-24 w-24 border-4 border-card shadow-md">
             <AvatarImage src={candidate.avatar} alt={candidate.name} />
@@ -48,7 +49,9 @@ export function CandidateDetails({ candidate }: CandidateDetailsProps) {
             <span className="text-muted-foreground">{candidate.location}</span>
           </div>
         </div>
-        
+      </div>
+
+      <div className="space-y-6 mt-6">
         <Separator />
 
         <div>
@@ -152,6 +155,7 @@ export function CandidateDetails({ candidate }: CandidateDetailsProps) {
                 </div>
             } 
         />
+      </div>
     </div>
   );
 }
