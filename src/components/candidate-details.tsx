@@ -52,13 +52,13 @@ export function CandidateDetails({ candidate }: CandidateDetailsProps) {
 
       <div className="flex justify-center gap-2 mt-4">
         <Button size="sm" className="bg-green-500 hover:bg-green-600 text-white">
-          <Check className="mr-2 h-4 w-4" /> Approve
+          <Check className="mr-2 h-4 w-4" /> Selected
         </Button>
         <Button size="sm" variant="destructive">
           <X className="mr-2 h-4 w-4" /> Rejected
         </Button>
-        <Button size="sm" variant="outline">
-          <Pause className="mr-2 h-4 w-4" /> Hold
+        <Button size="sm" variant="secondary">
+          <Pause className="mr-2 h-4 w-4" /> On Hold
         </Button>
       </div>
 
