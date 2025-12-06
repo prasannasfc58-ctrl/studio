@@ -18,7 +18,7 @@ export const candidates: Candidate[] = [
     courses: ['Advanced React', 'State Management Patterns'],
     caddScore: 85,
     skills: ['React', 'TypeScript', 'Node.js', 'GraphQL', 'Jest'],
-    topics: ['Frontend Architecture', 'Performance Optimization', 'Component Libraries'],
+    topics: ['React', 'TypeScript', 'Node.js', 'Component Libraries'],
     summary: 'Senior Frontend Engineer with 8 years of experience in building scalable web applications. Passionate about clean code and user experience.'
   },
   {

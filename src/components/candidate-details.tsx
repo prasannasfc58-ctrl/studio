@@ -74,7 +74,7 @@ export function CandidateDetails({ candidate }: CandidateDetailsProps) {
           </div>
 
           <div>
-              <h4 className="text-sm font-semibold mb-2">Your Skills</h4>
+              <h4 className="text-sm font-semibold mb-2">User Skills</h4>
               <div className="flex flex-wrap gap-2">
                   {candidate.skills.map(skill => (
                       <Badge 
