@@ -3,9 +3,10 @@
 import type { Candidate } from '@/lib/types';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Separator } from '@/components/ui/separator';
-import { Star, MapPin, Linkedin, Briefcase, GraduationCap } from 'lucide-react';
+import { Star, MapPin, Linkedin, Briefcase, GraduationCap, Check, X, Pause } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
+import { Button } from '@/components/ui/button';
 
 interface CandidateDetailsProps {
   candidate: Candidate | null;
@@ -47,6 +48,18 @@ export function CandidateDetails({ candidate }: CandidateDetailsProps) {
           <MapPin className="h-4 w-4 text-muted-foreground" />
           <span className="text-muted-foreground">{candidate.location}</span>
         </div>
+      </div>
+
+      <div className="flex justify-center gap-2 mt-4">
+        <Button size="sm" className="bg-green-500 hover:bg-green-600 text-white">
+          <Check className="mr-2 h-4 w-4" /> Approve
+        </Button>
+        <Button size="sm" variant="destructive">
+          <X className="mr-2 h-4 w-4" /> Rejected
+        </Button>
+        <Button size="sm" variant="outline">
+          <Pause className="mr-2 h-4 w-4" /> Hold
+        </Button>
       </div>
 
       <div className="space-y-6 mt-6">
