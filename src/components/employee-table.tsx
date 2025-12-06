@@ -3,9 +3,10 @@
 import type { Candidate } from '@/lib/types';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { MoreHorizontal } from 'lucide-react';
+import { MoreHorizontal, Star } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
+import { Badge } from '@/components/ui/badge';
 
 interface EmployeeTableProps {
   candidates: Candidate[];
@@ -20,10 +21,10 @@ export function EmployeeTable({ candidates, selectedCandidateId, onSelectCandida
         <TableHeader>
           <TableRow>
             <TableHead className="w-[250px]">Name</TableHead>
-            <TableHead>Employee ID</TableHead>
-            <TableHead>Department</TableHead>
-            <TableHead>Phone Number</TableHead>
-            <TableHead>City</TableHead>
+            <TableHead>Email</TableHead>
+            <TableHead>Skills</TableHead>
+            <TableHead>CADD Score</TableHead>
+            <TableHead>Location</TableHead>
             <TableHead className="w-[50px]"></TableHead>
           </TableRow>
         </TableHeader>
@@ -42,14 +43,25 @@ export function EmployeeTable({ candidates, selectedCandidateId, onSelectCandida
                   </Avatar>
                   <div>
                     <p className="font-medium">{candidate.name}</p>
-                    <p className="text-xs text-muted-foreground">{candidate.summary.split('.')[0]}</p>
+                    <p className="text-xs text-muted-foreground">{candidate.phone}</p>
                   </div>
                 </div>
               </TableCell>
-              <TableCell>{candidate.id}</TableCell>
-              <TableCell>{candidate.skills[1]}</TableCell>
-              <TableCell>{candidate.phone}</TableCell>
-              <TableCell>Austin</TableCell>
+              <TableCell>{candidate.email}</TableCell>
+              <TableCell>
+                <div className="flex flex-wrap gap-1">
+                  {candidate.skills.slice(0, 2).map(skill => (
+                    <Badge key={skill} variant="secondary" className="text-xs">{skill}</Badge>
+                  ))}
+                </div>
+              </TableCell>
+              <TableCell>
+                <div className="flex items-center gap-1.5">
+                  <Star className="h-4 w-4 text-primary/80" />
+                  <span className="font-semibold">{candidate.caddScore}</span>
+                </div>
+              </TableCell>
+              <TableCell>{candidate.location}</TableCell>
               <TableCell>
                 <Button variant="ghost" size="icon">
                   <MoreHorizontal className="h-4 w-4" />

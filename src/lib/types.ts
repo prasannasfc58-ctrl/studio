@@ -4,6 +4,7 @@ export type Candidate = {
   avatar: string;
   email: string;
   phone: string;
+  location: string;
   status: 'Available' | 'Interviewing' | 'Hired';
   courses: string[];
   caddScore: number;
