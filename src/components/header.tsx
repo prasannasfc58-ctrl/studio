@@ -14,9 +14,9 @@ export function Header({ onNavToggle, isNavOpen }: HeaderProps) {
     return (
         <header className="flex items-center justify-between h-16 px-6 border-b bg-card">
             <div className="flex items-center gap-4">
-                <Button variant="ghost" size="icon" className="md:hidden" onClick={onNavToggle}>
+                <button className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-10 w-10 md:hidden" onClick={onNavToggle}>
                     {isNavOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-                </Button>
+                </button>
                 <h1 className="text-xl font-semibold">Employees</h1>
             </div>
             <div className="flex items-center gap-4">

@@ -19,15 +19,15 @@ export function Sidebar({ isNavOpen }: SidebarProps) {
         )}>
             <Logo />
             <div className="flex flex-col space-y-4">
-                <Button variant="ghost" size="icon" className="text-primary bg-primary/10 rounded-lg">
+                <button className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-10 w-10 text-primary bg-primary/10 rounded-lg">
                     <Briefcase className="h-6 w-6" />
-                </Button>
-                <Button variant="ghost" size="icon" className="text-muted-foreground">
+                </button>
+                <button className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-10 w-10 text-muted-foreground">
                     <FileText className="h-6 w-6" />
-                </Button>
-                <Button variant="ghost" size="icon" className="text-muted-foreground">
+                </button>
+                <button className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-10 w-10 text-muted-foreground">
                     <MessageSquare className="h-6 w-6" />
-                </Button>
+                </button>
             </div>
         </nav>
     );

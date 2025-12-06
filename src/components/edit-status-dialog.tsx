@@ -60,15 +60,14 @@ export function EditStatusDialog({ candidate, onOpenChange, onStatusChange }: Ed
         </DialogHeader>
         <div className="grid gap-4 py-4">
           {otherStatuses.map(status => (
-            <Button
+            <button
               key={status}
-              variant={getButtonVariant(status)}
-              className={status === 'Selected' ? 'bg-green-500 hover:bg-green-600 text-white' : ''}
+              className={`inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 h-10 px-4 py-2 ${status === 'Selected' ? 'bg-green-500 hover:bg-green-600 text-white' : getButtonVariant(status) === 'destructive' ? 'bg-destructive text-destructive-foreground hover:bg-destructive/90' : 'bg-secondary text-secondary-foreground hover:bg-secondary/80'}`}
               onClick={() => handleStatusClick(status)}
             >
               {getButtonIcon(status)}
               {status}
-            </Button>
+            </button>
           ))}
         </div>
       </DialogContent>

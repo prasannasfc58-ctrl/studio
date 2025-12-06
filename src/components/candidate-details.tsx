@@ -43,12 +43,12 @@ export function CandidateDetails({ candidate, onStatusChange, onEditStatus }: Ca
       case 'On Hold':
         return (
           <div className="flex justify-center gap-2 mt-4">
-            <Button size="sm" className="bg-green-500 hover:bg-green-600 text-white" onClick={() => onStatusChange(candidate.id, 'Selected')}>
+            <button className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-green-500 hover:bg-green-600 text-white h-9 px-3" onClick={() => onStatusChange(candidate.id, 'Selected')}>
               <Check className="mr-2 h-4 w-4" /> Selected
-            </Button>
-            <Button size="sm" variant="destructive" onClick={() => onStatusChange(candidate.id, 'Rejected')}>
+            </button>
+            <button className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-destructive text-destructive-foreground hover:bg-destructive/90 h-9 px-3" onClick={() => onStatusChange(candidate.id, 'Rejected')}>
               <X className="mr-2 h-4 w-4" /> Rejected
-            </Button>
+            </button>
           </div>
         );
       case 'Selected':
@@ -58,9 +58,9 @@ export function CandidateDetails({ candidate, onStatusChange, onEditStatus }: Ca
               <Badge className="bg-green-100 text-green-800 border-green-300 text-base py-2 px-4">
                   <Check className="mr-2 h-4 w-4" /> Selected
               </Badge>
-              <Button variant="ghost" size="icon" onClick={() => onEditStatus(candidate)}>
+              <button className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-10 w-10" onClick={() => onEditStatus(candidate)}>
                   <Pencil className="h-4 w-4 text-muted-foreground" />
-              </Button>
+              </button>
             </div>
           </div>
         );
@@ -71,9 +71,9 @@ export function CandidateDetails({ candidate, onStatusChange, onEditStatus }: Ca
                 <Badge variant="destructive" className="text-base py-2 px-4">
                     <X className="mr-2 h-4 w-4" /> Rejected
                 </Badge>
-                <Button variant="ghost" size="icon" onClick={() => onEditStatus(candidate)}>
+                <button className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-10 w-10" onClick={() => onEditStatus(candidate)}>
                     <Pencil className="h-4 w-4 text-muted-foreground" />
-                </Button>
+                </button>
             </div>
           </div>
         );

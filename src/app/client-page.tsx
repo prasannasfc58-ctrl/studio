@@ -15,7 +15,6 @@ import { CandidateDetails } from '@/components/candidate-details';
 import { Header } from '@/components/header';
 import { Sidebar } from '@/components/sidebar';
 import { Filters } from '@/components/filters';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 const allCourses = Array.from(new Set(initialCandidates.flatMap(c => c.courses)));
 const allStatuses: Candidate['status'][] = ['On Hold', 'Selected', 'Rejected'];
@@ -120,12 +119,12 @@ export function TalentTrackClientPage() {
 
           <div className="flex flex-1 overflow-hidden">
             <main className="flex-1 p-2 md:p-6 flex flex-col">
-              <Card className="h-full flex flex-col">
-                <CardHeader>
-                  <CardTitle>Employee Directory</CardTitle>
+              <div className="rounded-lg border bg-card text-card-foreground shadow-sm h-full flex flex-col">
+                <div className="flex flex-col space-y-1.5 p-6">
+                  <h2 className="text-2xl font-semibold leading-none tracking-tight">Employee Directory</h2>
                   <p className="text-muted-foreground text-sm">Manage your team and their information.</p>
-                </CardHeader>
-                <CardContent className="flex flex-col flex-1 min-h-0">
+                </div>
+                <div className="p-6 pt-0 flex flex-col flex-1 min-h-0">
                   <Filters
                     searchTerm={searchTerm}
                     setSearchTerm={setSearchTerm}
@@ -145,8 +144,8 @@ export function TalentTrackClientPage() {
                       onSelectCandidate={handleSelectCandidate}
                     />
                   </div>
-                </CardContent>
-              </Card>
+                </div>
+              </div>
             </main>
 
             {!isMobile && (

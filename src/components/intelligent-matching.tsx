@@ -3,7 +3,6 @@
 import { useState } from 'react';
 import { Sparkles, Loader2, CheckCircle, XCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { getMatchingSummary } from '@/app/actions';
 import type { IntelligentCandidateMatchingOutput } from '@/ai/flows/intelligent-candidate-matching';
@@ -40,18 +39,18 @@ export function IntelligentMatching({ candidateSkills, listedTopics }: Intellige
   };
 
   return (
-    <Card className="bg-accent/50 border-primary/20">
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2 text-lg">
+    <div className="rounded-lg border bg-accent/50 border-primary/20 shadow-sm">
+      <div className="flex flex-col space-y-1.5 p-6">
+        <h3 className="flex items-center gap-2 text-lg font-semibold leading-none tracking-tight">
           <Sparkles className="text-primary" />
           Intelligent Matching
-        </CardTitle>
-      </CardHeader>
-      <CardContent>
+        </h3>
+      </div>
+      <div className="p-6 pt-0">
         <p className="mb-4 text-sm text-muted-foreground">
           Use AI to analyze how well this candidate's skills align with the required topics.
         </p>
-        <Button onClick={handleMatch} disabled={loading}>
+        <button onClick={handleMatch} disabled={loading} className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2">
           {loading ? (
             <>
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -63,7 +62,7 @@ export function IntelligentMatching({ candidateSkills, listedTopics }: Intellige
               Match Skills to Topics
             </>
           )}
-        </Button>
+        </button>
         {result && (
           <div className="mt-4 space-y-3 rounded-lg border bg-background p-4">
             <div className="flex items-center gap-2">
@@ -83,7 +82,7 @@ export function IntelligentMatching({ candidateSkills, listedTopics }: Intellige
             <p className="text-sm text-foreground/80">{result.matchSummary}</p>
           </div>
         )}
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   );
 }
