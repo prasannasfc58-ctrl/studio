@@ -179,7 +179,7 @@ export function TalentTrackClientPage() {
                     <CardTitle>Employee Directory</CardTitle>
                     <p className="text-muted-foreground text-sm">Manage your team and their information.</p>
                 </CardHeader>
-                <CardContent className="flex flex-col flex-1">
+                <CardContent className="flex flex-col flex-1 min-h-0">
                   {/* Filters */}
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 pb-6 items-end">
                     <div>
