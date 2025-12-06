@@ -4,7 +4,7 @@ import type { Candidate } from '@/lib/types';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Separator } from '@/components/ui/separator';
-import { Star, MapPin, Check, X } from 'lucide-react';
+import { Star, MapPin } from 'lucide-react';
 import { IntelligentMatching } from './intelligent-matching';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
@@ -63,41 +63,33 @@ export function CandidateDetails({ candidate }: CandidateDetailsProps) {
         
         <Separator />
 
-        <div>
-            <h3 className="font-semibold mb-4">Skills Match</h3>
-            <div className="space-y-4">
-                <div>
-                    <div className="flex justify-between items-center mb-2">
-                        <p className="text-sm font-medium">Match Percentage</p>
-                        <p className="text-sm font-bold text-primary">{Math.round(skillMatchPercentage)}%</p>
-                    </div>
-                    <Progress value={skillMatchPercentage} className="h-2" />
-                </div>
+        <div className="space-y-4">
+          <div>
+              <h4 className="text-sm font-semibold mb-2">Required Skills</h4>
+              <div className="flex flex-wrap gap-2">
+                  {candidate.topics.map(topic => (
+                      <Badge key={topic} variant="outline" className="bg-orange-100 text-orange-800 border-orange-200">{topic}</Badge>
+                  ))}
+              </div>
+          </div>
 
-                <div>
-                    <h4 className="text-sm font-semibold mb-2">Required Skills ({candidate.topics.length})</h4>
-                    <div className="flex flex-wrap gap-2">
-                        {candidate.topics.map(topic => (
-                            <Badge key={topic} variant="outline">{topic}</Badge>
-                        ))}
-                    </div>
-                </div>
+          <div>
+              <h4 className="text-sm font-semibold mb-2">Your Skills</h4>
+              <div className="flex flex-wrap gap-2">
+                  {matchingSkills.map(skill => (
+                      <Badge key={skill} variant="outline" className="bg-green-100 text-green-800 border-green-200">{skill}</Badge>
+                  ))}
+              </div>
+          </div>
 
-                <div>
-                    <h4 className="text-sm font-semibold mb-2">Employee Skills ({candidate.skills.length})</h4>
-                    <div className="flex flex-wrap gap-2">
-                        {candidate.skills.map(skill => {
-                            const isMatch = candidate.topics.includes(skill);
-                            return (
-                                <Badge key={skill} variant={isMatch ? 'default' : 'secondary'} className={`flex items-center gap-1.5 ${isMatch ? 'bg-green-100 text-green-800 border-green-300' : ''}`}>
-                                  {isMatch ? <Check className="h-3 w-3"/> : <X className="h-3 w-3 text-muted-foreground"/>}
-                                  {skill}
-                                </Badge>
-                            );
-                        })}
-                    </div>
-                </div>
-            </div>
+          <div>
+              <div className="flex justify-between items-center mb-2">
+                  <p className="text-sm font-semibold">Skill Match</p>
+                  <p className="text-sm font-bold text-foreground">{Math.round(skillMatchPercentage)}%</p>
+              </div>
+              <Progress value={skillMatchPercentage} className="h-2" />
+              <p className="text-xs text-muted-foreground mt-1">You have completed {Math.round(skillMatchPercentage)}% of the required skills for this job.</p>
+          </div>
         </div>
 
         <Separator />
