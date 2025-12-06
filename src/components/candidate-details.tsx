@@ -19,7 +19,7 @@ interface CandidateDetailsProps {
 const InfoRow = ({ label, value, icon }: { label: string, value: React.ReactNode, icon?: React.ReactNode }) => (
     <div className="flex justify-between items-start text-sm py-1">
         <p className="text-muted-foreground flex items-center gap-2">{icon}{label}</p>
-        <div className="font-medium text-foreground text-right">{value}</div>
+        <div className="font-medium text-foreground text-right break-all">{value}</div>
     </div>
 );
 

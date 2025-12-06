@@ -5,7 +5,7 @@ import { candidates as initialCandidates } from '@/lib/data';
 import { CandidateDetails } from '@/components/candidate-details';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Search, Briefcase, FileText, MessageSquare } from 'lucide-react';
+import { Search, Briefcase, FileText, MessageSquare, Menu, X } from 'lucide-react';
 import { Logo } from '@/components/logo';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -25,6 +25,9 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
 import { EditStatusDialog } from '@/components/edit-status-dialog';
+import { useIsMobile } from '@/hooks/use-mobile';
+import { Sheet, SheetContent } from '@/components/ui/sheet';
+import { cn } from '@/lib/utils';
 
 
 const allCourses = Array.from(new Set(initialCandidates.flatMap(c => c.courses)));
@@ -39,6 +42,8 @@ export function TalentTrackClientPage() {
   const [courseFilter, setCourseFilter] = useState('All');
   const [confirmation, setConfirmation] = useState<{ isOpen: boolean; candidateId: string; newStatus: Candidate['status'] } | null>(null);
   const [editStatusCandidate, setEditStatusCandidate] = useState<Candidate | null>(null);
+  const [isNavOpen, setIsNavOpen] = useState(false);
+  const isMobile = useIsMobile();
 
 
   const filteredAndSortedCandidates = useMemo(() => {
@@ -59,24 +64,28 @@ export function TalentTrackClientPage() {
   }, [candidates, searchTerm, statusFilter, caddScoreFilter, courseFilter]);
 
   useEffect(() => {
-    if (initialCandidates.length > 0) {
+    if (!isMobile && initialCandidates.length > 0) {
       if (filteredAndSortedCandidates.length > 0) {
         setSelectedCandidateId(filteredAndSortedCandidates[0].id);
       } else {
         setSelectedCandidateId(null);
       }
-    }
-  }, []);
-
-  useEffect(() => {
-    if (filteredAndSortedCandidates.length > 0) {
-      if (!selectedCandidateId || !filteredAndSortedCandidates.find(c => c.id === selectedCandidateId)) {
-        setSelectedCandidateId(filteredAndSortedCandidates[0].id);
-      }
     } else {
       setSelectedCandidateId(null);
     }
-  }, [filteredAndSortedCandidates, selectedCandidateId]);
+  }, [isMobile]);
+
+  useEffect(() => {
+    if (!isMobile && filteredAndSortedCandidates.length > 0) {
+      if (!selectedCandidateId || !filteredAndSortedCandidates.find(c => c.id === selectedCandidateId)) {
+        setSelectedCandidateId(filteredAndSortedCandidates[0].id);
+      }
+    } else if (isMobile) {
+      setSelectedCandidateId(null);
+    } else {
+       setSelectedCandidateId(null);
+    }
+  }, [filteredAndSortedCandidates, selectedCandidateId, isMobile]);
   
   const selectedCandidate = useMemo(() => {
     return candidates.find(c => c.id === selectedCandidateId) || null;
@@ -96,6 +105,9 @@ export function TalentTrackClientPage() {
     );
     setConfirmation(null);
     setEditStatusCandidate(null);
+    if (isMobile) {
+      setSelectedCandidateId(null);
+    }
   };
 
   const cancelStatusChange = () => {
@@ -105,13 +117,21 @@ export function TalentTrackClientPage() {
   const openEditStatusDialog = (candidate: Candidate) => {
     setEditStatusCandidate(candidate);
   };
+  
+  const handleSelectCandidate = (candidateId: string) => {
+    setSelectedCandidateId(candidateId);
+  }
 
 
   return (
     <>
       <div className="flex h-screen bg-background">
         {/* Navigation Sidebar */}
-        <nav className="w-20 bg-card border-r flex flex-col items-center py-4 space-y-6">
+        <nav className={cn(
+          "bg-card border-r flex-col items-center py-4 space-y-6",
+          "hidden md:flex md:w-20",
+          isNavOpen && "flex w-full absolute z-40 h-full"
+          )}>
           <Logo />
           <div className="flex flex-col space-y-4">
             <Button variant="ghost" size="icon" className="text-primary bg-primary/10 rounded-lg">
@@ -129,11 +149,18 @@ export function TalentTrackClientPage() {
         {/* Main Content */}
         <div className="flex-1 flex flex-col">
           <header className="flex items-center justify-between h-16 px-6 border-b bg-card">
-            <h1 className="text-xl font-semibold">Employees</h1>
             <div className="flex items-center gap-4">
-              <span className="text-sm text-muted-foreground">Employees</span>
-              <span className="text-sm text-muted-foreground">Documents</span>
-              <span className="text-sm text-muted-foreground">Message</span>
+              <Button variant="ghost" size="icon" className="md:hidden" onClick={() => setIsNavOpen(!isNavOpen)}>
+                {isNavOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+              </Button>
+              <h1 className="text-xl font-semibold">Employees</h1>
+            </div>
+            <div className="flex items-center gap-4">
+              <div className="hidden md:flex items-center gap-4">
+                <span className="text-sm text-muted-foreground">Employees</span>
+                <span className="text-sm text-muted-foreground">Documents</span>
+                <span className="text-sm text-muted-foreground">Message</span>
+              </div>
               <Avatar className="h-9 w-9">
                 <AvatarImage src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHxtYW4lMjBwb3J0cmFpdHxlbnwwfHx8fDE3NjQ5NzY5OTN8MA&ixlib=rb-4.1.0&q=80&w=1080" alt="User" />
                 <AvatarFallback>U</AvatarFallback>
@@ -143,7 +170,7 @@ export function TalentTrackClientPage() {
 
           <div className="flex flex-1 overflow-hidden">
             {/* Employee Directory */}
-            <main className="flex-1 p-6 overflow-y-auto">
+            <main className="flex-1 p-2 md:p-6 overflow-y-auto">
               <Card className="h-full">
                 <CardHeader>
                     <CardTitle>Employee Directory</CardTitle>
@@ -209,23 +236,40 @@ export function TalentTrackClientPage() {
                   <EmployeeTable
                     candidates={filteredAndSortedCandidates}
                     selectedCandidateId={selectedCandidateId}
-                    onSelectCandidate={setSelectedCandidateId}
+                    onSelectCandidate={handleSelectCandidate}
                   />
                 </CardContent>
               </Card>
             </main>
 
-            {/* Candidate Details Panel */}
-            <aside className="w-1/3 min-w-[350px] max-w-[450px] border-l bg-card overflow-y-auto p-6">
-              <CandidateDetails 
-                candidate={selectedCandidate}
-                onStatusChange={handleStatusChangeRequest} 
-                onEditStatus={openEditStatusDialog}
-              />
-            </aside>
+            {/* Candidate Details Panel - Desktop */}
+            {!isMobile && (
+              <aside className="w-1/3 min-w-[350px] max-w-[450px] border-l bg-card overflow-y-auto p-6">
+                <CandidateDetails 
+                  candidate={selectedCandidate}
+                  onStatusChange={handleStatusChangeRequest} 
+                  onEditStatus={openEditStatusDialog}
+                />
+              </aside>
+            )}
           </div>
         </div>
       </div>
+      
+      {/* Candidate Details Sheet - Mobile */}
+      {isMobile && (
+        <Sheet open={!!selectedCandidate} onOpenChange={(open) => !open && setSelectedCandidateId(null)}>
+            <SheetContent side="right" className="p-0 w-full max-w-full sm:max-w-full">
+              <div className="overflow-y-auto h-full p-6">
+                <CandidateDetails
+                  candidate={selectedCandidate}
+                  onStatusChange={handleStatusChangeRequest}
+                  onEditStatus={openEditStatusDialog}
+                />
+              </div>
+            </SheetContent>
+        </Sheet>
+      )}
       
       {/* Confirmation Dialog */}
       <AlertDialog open={!!confirmation?.isOpen} onOpenChange={() => cancelStatusChange()}>

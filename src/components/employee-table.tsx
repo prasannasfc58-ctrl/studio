@@ -7,6 +7,7 @@ import { Star } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Badge } from '@/components/ui/badge';
 import { SkillMatchChart } from './skill-match-chart';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 interface EmployeeTableProps {
   candidates: Candidate[];
@@ -15,16 +16,17 @@ interface EmployeeTableProps {
 }
 
 export function EmployeeTable({ candidates, selectedCandidateId, onSelectCandidate }: EmployeeTableProps) {
+  const isMobile = useIsMobile();
   return (
     <div className="border rounded-lg overflow-hidden">
       <Table>
         <TableHeader>
           <TableRow className="bg-muted/50 hover:bg-muted/50">
             <TableHead className="w-[250px] p-4">Name</TableHead>
-            <TableHead className="p-4">Email</TableHead>
+            {!isMobile && <TableHead className="p-4">Email</TableHead>}
             <TableHead className="p-4">Skills</TableHead>
-            <TableHead className="p-4">CADD Score</TableHead>
-            <TableHead className="p-4">Location</TableHead>
+            {!isMobile && <TableHead className="p-4">CADD Score</TableHead>}
+            {!isMobile && <TableHead className="p-4">Location</TableHead>}
             <TableHead className="p-4">Skill Match</TableHead>
           </TableRow>
         </TableHeader>
@@ -51,26 +53,26 @@ export function EmployeeTable({ candidates, selectedCandidateId, onSelectCandida
                     </div>
                   </div>
                 </TableCell>
-                <TableCell className="p-4">{candidate.email}</TableCell>
+                {!isMobile && <TableCell className="p-4">{candidate.email}</TableCell>}
                 <TableCell className="p-4">
                   <div className="flex flex-wrap items-center gap-1">
-                    {candidate.skills.slice(0, 2).map(skill => (
+                    {candidate.skills.slice(0, isMobile ? 1 : 2).map(skill => (
                       <Badge key={skill} variant="secondary" className="text-xs">{skill}</Badge>
                     ))}
-                    {candidate.skills.length > 2 && (
+                    {candidate.skills.length > (isMobile ? 1 : 2) && (
                       <Badge variant="outline" className="text-xs font-medium">
-                        +{candidate.skills.length - 2}
+                        +{candidate.skills.length - (isMobile ? 1 : 2)}
                       </Badge>
                     )}
                   </div>
                 </TableCell>
-                <TableCell className="p-4">
+                {!isMobile && <TableCell className="p-4">
                   <div className="flex items-center gap-1.5">
                     <Star className="h-4 w-4 text-primary fill-current" />
                     <span className="font-semibold">{candidate.caddScore}</span>
                   </div>
-                </TableCell>
-                <TableCell className="p-4">{candidate.location}</TableCell>
+                </TableCell>}
+                {!isMobile && <TableCell className="p-4">{candidate.location}</TableCell>}
                 <TableCell className="p-4">
                   <div className="flex items-center gap-2">
                     <SkillMatchChart value={skillMatchPercentage} />
@@ -82,7 +84,7 @@ export function EmployeeTable({ candidates, selectedCandidateId, onSelectCandida
           })}
            {candidates.length === 0 && (
             <TableRow>
-              <TableCell colSpan={6} className="h-24 text-center">
+              <TableCell colSpan={isMobile ? 4 : 6} className="h-24 text-center">
                 No employees found matching your criteria.
               </TableCell>
             </TableRow>
