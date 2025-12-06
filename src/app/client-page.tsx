@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useMemo, useEffect } from 'react';
@@ -38,7 +39,7 @@ export function TalentTrackClientPage() {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCandidateId, setSelectedCandidateId] = useState<string | null>(null);
   const [statusFilter, setStatusFilter] = useState('All');
-  const [caddScoreFilter, setCaddScoreFilter] = useState([0, 100]);
+  const [skillPercentageFilter, setSkillPercentageFilter] = useState([0, 100]);
   const [courseFilter, setCourseFilter] = useState('All');
   const [confirmation, setConfirmation] = useState<{ isOpen: boolean; candidateId: string; newStatus: Candidate['status'] } | null>(null);
   const [editStatusCandidate, setEditStatusCandidate] = useState<Candidate | null>(null);
@@ -54,14 +55,16 @@ export function TalentTrackClientPage() {
       .filter(candidate => 
         statusFilter === 'All' || candidate.status === statusFilter
       )
-      .filter(candidate =>
-        candidate.caddScore >= caddScoreFilter[0] && candidate.caddScore <= caddScoreFilter[1]
-      )
+      .filter(candidate => {
+        const matchingSkills = candidate.skills.filter(skill => candidate.topics.includes(skill));
+        const skillMatchPercentage = candidate.topics.length > 0 ? (matchingSkills.length / candidate.topics.length) * 100 : 0;
+        return skillMatchPercentage >= skillPercentageFilter[0] && skillMatchPercentage <= skillPercentageFilter[1];
+      })
       .filter(candidate =>
         courseFilter === 'All' || candidate.courses.includes(courseFilter)
       )
       .sort((a, b) => a.name.localeCompare(b.name));
-  }, [candidates, searchTerm, statusFilter, caddScoreFilter, courseFilter]);
+  }, [candidates, searchTerm, statusFilter, skillPercentageFilter, courseFilter]);
 
   useEffect(() => {
     if (!isMobile && initialCandidates.length > 0) {
@@ -221,13 +224,13 @@ export function TalentTrackClientPage() {
                       </Select>
                     </div>
                     <div>
-                      <Label>CADD Score: {caddScoreFilter[0]} - {caddScoreFilter[1]}</Label>
+                      <Label>Skills Percentage: {skillPercentageFilter[0]}% - {skillPercentageFilter[1]}%</Label>
                       <Slider
-                        value={caddScoreFilter}
+                        value={skillPercentageFilter}
                         min={0}
                         max={100}
                         step={1}
-                        onValueChange={(value) => setCaddScoreFilter(value)}
+                        onValueChange={(value) => setSkillPercentageFilter(value)}
                         className="mt-1 pt-2"
                       />
                     </div>
